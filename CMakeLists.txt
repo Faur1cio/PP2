@@ -3,4 +3,4 @@ project(PP2 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(PP2 main.c Grafo.c Grafo.h Arbol.c Arbol.h)
+add_executable(PP2 main.c FilesTree.c FilesTree.h)

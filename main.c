@@ -1,12 +1,9 @@
 #include <stdio.h>
 
-#include "Arbol.h"
-#include "Grafo.h"
+#include "FilesTree.h"
+#include "TasksGraph.h"
 
 int main() {
     printf("Hola Mundoooo!\n");
     return 0;
 }
-
-//holisssss
-//Hola uwu
