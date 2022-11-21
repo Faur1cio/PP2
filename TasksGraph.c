@@ -98,7 +98,16 @@ int getTaskEffort(graph *G, int pID) {
     return 0;
 }
 
+int linearSearchEdge(graph *G, int pOrigin, int pDest) {
+    edgeNode *n;
+    for (n = G->edges; n != NULL; n = n->next)
+        if (n->origin == pOrigin && n->dest == pDest)
+            return 1;
+    return 0;
+}
+
 void insertEdge(graph *G, int pOrigin, int pDest) {
+    if(linearSearchEdge(G, pOrigin, pDest) == 1) return;
     edgeNode *n, *aux;
     int time = getTaskTime(G, pOrigin);
     int effort = getTaskEffort(G, pOrigin);
@@ -122,15 +131,15 @@ void printAdjacencyList(graph *G) {
     printf("Adjacency List:\n");
     for (V = G->vertices; V != NULL; V = V->next) {
         printf("%d");
-        for(E = G->edges; E != NULL; E = E->next)
-            if(E->origin == V->task.ID)
+        for (E = G->edges; E != NULL; E = E->next)
+            if (E->origin == V->task.ID)
                 printf(" -> {%d, time:%d, effort:%d}", E->dest, E->time, E->effort);
         printf("\n");
     }
     printf("\n");
 }
 
-int linearSearch(graph *G, int pID) {
+int linearSearchVertex(graph *G, int pID) {
     vertexNode *n;
     n = G->vertices;
     for (int i = 0; i < G->size; i++) {
@@ -141,18 +150,26 @@ int linearSearch(graph *G, int pID) {
     return -1;
 }
 
+int searchID(graph *G, int pID) {
+    vertexNode *n;
+    for (n = G->vertices; n != NULL; n = n->next)
+        if (n->task.ID == pID || searchDocument(n->tree, pID) == 1)
+            return 1;
+    return 0;
+}
+
 void graphMatrixEffort(graph *G, int **matrix) {
     int i, j;
     for (i = 0; i < G->size; i++)
-        for (j = 0; j < G->size; j++){
-            if(i == j)
+        for (j = 0; j < G->size; j++) {
+            if (i == j)
                 matrix[i][j] = 0;
             else
                 matrix[i][j] = INF;
         }
     for (edgeNode *n = G->edges; n != NULL; n = n->next) {
-        i = linearSearch(G, n->origin);
-        j = linearSearch(G, n->dest);
+        i = linearSearchVertex(G, n->origin);
+        j = linearSearchVertex(G, n->dest);
         matrix[i][j] = n->effort;
     }
 }
@@ -160,15 +177,91 @@ void graphMatrixEffort(graph *G, int **matrix) {
 void graphMatrixTime(graph *G, int **matrix) {
     int i, j;
     for (i = 0; i < G->size; i++)
-        for (j = 0; j < G->size; j++){
-            if(i == j)
+        for (j = 0; j < G->size; j++) {
+            if (i == j)
                 matrix[i][j] = 0;
             else
                 matrix[i][j] = INF;
         }
     for (edgeNode *n = G->edges; n != NULL; n = n->next) {
-        i = linearSearch(G, n->origin);
-        j = linearSearch(G, n->dest);
+        i = linearSearchVertex(G, n->origin);
+        j = linearSearchVertex(G, n->dest);
         matrix[i][j] = n->time;
     }
+}
+
+void freeGraph(graph *G) {
+    vertexNode *n, *aux;
+    edgeNode *n2, *aux2;
+    if (G->vertices == NULL) {
+        return;
+    }
+    n = G->vertices;
+    while (n != NULL) {
+        aux = n;
+        n = n->next;
+        freeTree(aux->tree);
+        free(aux);
+    }
+    n2 = G->edges;
+    while (n2 != NULL) {
+        aux2 = n2;
+        n2 = n2->next;
+        free(aux2);
+    }
+    G->vertices = NULL;
+    G->edges = NULL;
+}
+
+void saveGraph(graph *G) {
+    FILE *file1, *file2;
+    char str[STRSIZE];
+    file1 = fopen("verticesList", "wb");
+    file2 = fopen("EdgesList", "wb");
+
+    if (file1 == NULL || file2 == NULL)
+        return;
+
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        fwrite(n, sizeof(vertexNode), 1, file1);
+        str[0] = '\0';
+        sprintf(str, "%d", n->task.ID);
+        writeTreeToFile(str, n->tree);
+    }
+    for (edgeNode *n = G->edges; n != NULL; n = n->next)
+        fwrite(n, sizeof(edgeNode), 1, file2);
+
+    printf("\nData stored successfully!!\n");
+    fclose(file1);
+    fclose(file2);
+}
+
+void loadGraph(graph *G) {
+    vertexNode *temp1 = (vertexNode *) malloc(sizeof(vertexNode));
+    edgeNode *temp2 = (edgeNode *) malloc(sizeof(edgeNode));
+
+    FILE *file1, *file2;
+    char str[STRSIZE];
+    file1 = fopen("verticesList", "rb");
+    file2 = fopen("EdgesList", "rb");
+
+    if (file1 == NULL || file2 == NULL)
+        return;
+
+    while (fread(temp1, sizeof(vertexNode), 1, file1))
+        insertVertex(G, temp1->task);
+
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        str[0] = '\0';
+        sprintf(str, "%d", n->task.ID);
+        readFileToTree(str, &n->tree);
+    }
+
+    while (fread(temp2, sizeof(edgeNode), 1, file2))
+        insertEdge(G, temp2->origin, temp2->dest);
+
+    free(temp1);
+    free(temp2);
+    fclose(file1);
+    fclose(file2);
 }
