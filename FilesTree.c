@@ -102,30 +102,35 @@ treeNode *getMinNode(treeNode *currentNode) {
  * if(isLeaf(root) == 1)
  *      root = NULL;
  */
+
 treeNode *deleteTreeNode(treeNode *pRoot, int pID) {
-    if (isEmpty(pRoot) == 1)
+    if (pRoot == NULL)
         return pRoot;
 
-    if (pRoot->doc.ID == pID) {
-        treeNode *temp;
+    if (pID < pRoot->doc.ID)
+        pRoot->left = deleteTreeNode(pRoot->left, pID);
+
+    else if (pID > pRoot->doc.ID)
+        pRoot->right = deleteTreeNode(pRoot->right, pID);
+
+    else {
+
         if (pRoot->left == NULL) {
-            temp = pRoot->right;
+            treeNode *temp = pRoot->right;
             free(pRoot);
             return temp;
         } else if (pRoot->right == NULL) {
-            temp = pRoot->left;
+            treeNode *temp  = pRoot->left;
             free(pRoot);
             return temp;
-        } else {
-            temp = getMinNode(pRoot->right);
-            pRoot->doc = temp->doc;
-            pRoot->right = deleteTreeNode(pRoot->right, temp->doc.ID);
         }
-    } else if (pID < pRoot->doc.ID)
-        pRoot->left = deleteTreeNode(pRoot->left, pID);
-    else
-        pRoot->right = deleteTreeNode(pRoot->right, pID);
 
+        treeNode *temp  = getMinNode(pRoot->right);
+
+        pRoot->doc.ID = temp->doc.ID;
+
+        pRoot->right = deleteTreeNode(pRoot->right, temp->doc.ID);
+    }
     return pRoot;
 }
 

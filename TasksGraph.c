@@ -11,27 +11,12 @@ struct graph {
     int size;
 };
 
-struct task {
-    int ID;
-    char description[STRSIZE];
-    char type[STRSIZE];
-    int effort; // 1 to 10
-    int time; //minutes
-    char manager[STRSIZE];
-};
-
 struct edgeNode {
     int origin;
     int dest;
     int time;
     int effort;
     edgeNode *next;
-};
-
-struct vertexNode {
-    task task;
-    treeNode *tree;
-    vertexNode *next;
 };
 
 graph *newGraph() {
@@ -98,6 +83,22 @@ int getTaskEffort(graph *G, int pID) {
     return 0;
 }
 
+int linearSearchTask(graph *G, int pID) {
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        if (n->task.ID == pID)
+            return 1;
+    }
+    return 0;
+}
+
+vertexNode *getVertexNode(graph *G, int pID) {
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        if (n->task.ID == pID)
+            return n;
+    }
+    return NULL;
+}
+
 int linearSearchEdge(graph *G, int pOrigin, int pDest) {
     edgeNode *n;
     for (n = G->edges; n != NULL; n = n->next)
@@ -107,7 +108,9 @@ int linearSearchEdge(graph *G, int pOrigin, int pDest) {
 }
 
 void insertEdge(graph *G, int pOrigin, int pDest) {
-    if(linearSearchEdge(G, pOrigin, pDest) == 1) return;
+    if (linearSearchEdge(G, pOrigin, pDest) == 1 || pOrigin == pDest)
+        return;
+
     edgeNode *n, *aux;
     int time = getTaskTime(G, pOrigin);
     int effort = getTaskEffort(G, pOrigin);
@@ -125,6 +128,13 @@ void insertEdge(graph *G, int pOrigin, int pDest) {
     aux->next = newN;
 }
 
+void updateEdges(graph *G) {
+    for (edgeNode *n = G->edges; n != NULL; n = n->next) {
+        n->effort = getTaskEffort(G, n->origin);
+        n->time = getTaskTime(G, n->origin);
+    }
+}
+
 void printAdjacencyList(graph *G) {
     vertexNode *V;
     edgeNode *E;
@@ -137,6 +147,17 @@ void printAdjacencyList(graph *G) {
         printf("\n");
     }
     printf("\n");
+}
+
+void printProjectTasks(graph *G) {
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        printf("ID\t\t%d\n", n->task.ID);
+        printf("Desc.\t\t%s\n", n->task.description);
+        printf("Type\t\t%s\n", n->task.type);
+        printf("Effort\t\t%d\n", n->task.effort);
+        printf("Time\t\t%d\n", n->task.time);
+        printf("Manger\t\t%s\n\n", n->task.manager);
+    }
 }
 
 int linearSearchVertex(graph *G, int pID) {
