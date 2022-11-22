@@ -345,7 +345,54 @@ void registerDocument(int pID) {
 }
 
 void modifyDocumentMenu(int pID) {
+    printf("\n[*] Modify Task menu\n");
+    printf("[1] Change Path\n");
+    printf("[2] Change Description\n");
+    printf("[3] Change Type\n");
+    printf("[0] Exit\n\n");
+    printf("[*] Select an option:");
+
+    fflush(stdout);
+    fflush(stdin);
+
+    int choice = getchar();
+    while (choice == '\n')
+        choice = getchar();
+    printf("\n");
+    flushStdin();
+
     treeNode *node = getDocumentNode(Graph, pID);
+    document temp = node->doc;
+    char line[STRSIZE], str[STRSIZE];
+
+    switch (choice) {
+        case '1':
+            printf("[*] New Path:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%s", str);
+            strcpy(temp.path, str);
+            node->doc = temp;
+            return modifyDocumentMenu(pID);
+        case '2':
+            printf("[*] New Description:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%[^\n]", str);
+            strcpy(temp.description, str);
+            node->doc = temp;
+            return modifyDocumentMenu(pID);
+        case '3':
+            printf("[*] New Type:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%[^\n]", str);
+            strcpy(temp.type, str);
+            node->doc = temp;
+            return modifyDocumentMenu(pID);
+        case '0':
+            return;
+        default:
+            printf("[!] Invalid option, try again!!\n");
+            return modifyDocumentMenu(pID);
+    }
 }
 
 void projectDocumentationMenu() {
@@ -426,7 +473,8 @@ void projectDocumentationMenu() {
                 printf("[!] Invalid ID, it must be a document, try again!!\n");
                 return projectDocumentationMenu();
             }
-
+            modifyDocumentMenu(number);
+            return projectDocumentationMenu();
         case '5':
             printf("[*] Delete Document\n");
             printf("[*] Insert the Document ID:");
