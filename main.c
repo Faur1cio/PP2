@@ -25,6 +25,13 @@ int countDigits(int pNum) {
     return count;
 }
 
+int linearSearchArr(const int *pArr, int pSize, int pElement) {
+    for (int i = 0; i < pSize; i++)
+        if (pArr[i] == pElement)
+            return 1;
+    return 0;
+}
+
 int isNumeric(const char *str) {
     int i = 0;
     if (str[0] == '\0')
@@ -504,8 +511,68 @@ void projectDocumentationMenu() {
     }
 }
 
-void manageRoutesMenu() {
 
+void manageRoutesMenu() {
+    printf("\n[*] Routes menu\n");
+    printf("[1] Create/Add a Route\n");
+    printf("[2] Show Adjacency List\n");
+    printf("[0] Exit\n\n");
+    printf("[*] Select an option:");
+
+    int choice = getchar();
+    while (choice == '\n')
+        choice = getchar();
+    printf("\n");
+    flushStdin();
+
+    int route[Graph->size];
+    char line[STRSIZE], str[STRSIZE];
+    int number;
+
+    switch (choice) {
+        case '1':
+            if (Graph->size < 2) {
+                printf("[!] There are not enough tasks!!\n");
+                return manageRoutesMenu();
+            }
+            printf("[*] Adding Route\n");
+            printf("[*] List of tasks IDs:");
+            printTasksList(Graph);
+            printf("[*] Select the IDs and put them in order\n");
+            int i = 0;
+            while (i < Graph->size) {
+                printf("[*] Inset the Task #%d:", i);
+                fgets(line, STRSIZE, stdin);
+                sscanf(line, "%s", str);
+                if (!isNumeric(str)) {
+                    printf("[!] Invalid ID, it must be a number, try again!!\n");
+                    continue;
+                }
+                number = (int) strtol(str, (char **) NULL, 10);
+                if (!searchTaskID(Graph, number)) {
+                    printf("[!] Invalid ID, try again!!\n");
+                    continue;
+                }
+                if (linearSearchArr(route, Graph->size, number) != 0) {
+                    printf("[!] Task already in the route, try again!!\n");
+                    continue;
+                }
+                route[i] = number;
+                i++;
+            }
+            printf("\n[*] The the new route is:\n");
+            for (i = 0; i < Graph->size; i++)
+                printf("%d-->> ", route[i]);
+            printf("\n");
+            return manageRoutesMenu();
+        case '2':
+            return manageRoutesMenu();
+        case '0':
+            return;
+        default:
+            printf("[!] Invalid option, try again!!\n");
+            return manageRoutesMenu();
+    }
 }
 
 void menu() {

@@ -5,12 +5,6 @@
 
 #define INF 9999999
 
-struct graph {
-    vertexNode *vertices;
-    edgeNode *edges;
-    int size;
-};
-
 struct edgeNode {
     int origin;
     int dest;
@@ -177,6 +171,21 @@ void printProjectTasks(graph *G) {
         printf("Manger\t\t%s\n\n", n->task.manager);
     }
 }
+void printTasksList(graph *G) {
+    vertexNode *n = G->vertices;
+    printf("\n");
+    for (int i = 0; i < G->size; i++) {
+        if(i == 0)
+            printf("{%d, ", n->task.ID);
+        else if (i == G->size -1)
+            printf("%d}", n->task.ID);
+        else
+            printf("%d, ", n->task.ID);
+        n = n->next;
+    }
+    printf("\n");
+}
+
 
 void printTaskDocumentation(graph *G, char pDesc[], int pID) {
     int exists = 0;

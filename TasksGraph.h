@@ -8,6 +8,12 @@ typedef struct vertexNode vertexNode;
 typedef struct edgeNode edgeNode;
 typedef struct task task;
 
+struct graph {
+    vertexNode *vertices;
+    edgeNode *edges;
+    int size;
+};
+
 struct task {
     int ID;
     char description[STRSIZE];
@@ -32,6 +38,8 @@ void saveGraph(graph *G);
 void loadGraph(graph *G);
 
 void printProjectTasks(graph *G);
+
+void printTasksList(graph *G);
 
 int searchID(graph *G, int pID);
 
