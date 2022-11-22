@@ -32,15 +32,15 @@ void printDocument(treeNode *pRoot, int pID) {
         searchDocumentID(pRoot->right, pID);
 }
 
-treeNode *getFileNode(treeNode *pRoot, int pID) {
+treeNode *getTreeNode(treeNode *pRoot, int pID) {
     if (pRoot == NULL)
         return pRoot;
     if (pRoot->doc.ID == pID)
         return pRoot;
     if (pID < pRoot->doc.ID)
-        getFileNode(pRoot->left, pID);
+        getTreeNode(pRoot->left, pID);
     else
-        getFileNode(pRoot->right, pID);
+        getTreeNode(pRoot->right, pID);
 }
 
 void printPreOrder(treeNode *pRoot) {
@@ -64,7 +64,7 @@ void printInOrder(treeNode *pRoot) {
 void printDocTree(treeNode *pRoot) {
     if (pRoot != NULL) {
         printInOrder(pRoot->left);
-        printf("ID\t\t%d\n"
+        printf("ID.\t\t%d\n"
                "Path\t\t%s\n"
                "Desc\t\t%s\n"
                "Type\t\t%s\n\n", pRoot->doc.ID,

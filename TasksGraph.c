@@ -83,6 +83,16 @@ int getTaskEffort(graph *G, int pID) {
     return 0;
 }
 
+treeNode *getDocumentNode(graph *G, int pID) {
+    treeNode *n;
+    for (vertexNode *i = G->vertices; i != NULL; i = i->next)
+        if (searchDocumentID(i->tree, pID) == 1) {
+            n = getTreeNode(i->tree, pID);
+            return n;
+        }
+    return NULL;
+}
+
 int searchTaskID(graph *G, int pID) {
     for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
         if (n->task.ID == pID)

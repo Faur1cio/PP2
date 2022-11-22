@@ -51,4 +51,6 @@ void printDocumentByID(graph *G, int pID);
 
 void deleteDocument(graph *G, int pID);
 
+treeNode *getDocumentNode(graph *G, int pID);
+
 #endif //PP2_GRAFO_H

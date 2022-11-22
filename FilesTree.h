@@ -21,7 +21,7 @@ struct treeNode {
 
 int searchDocumentID(treeNode *pRoot, int pID);
 
-treeNode *getFileNode(treeNode *pRoot, int pID);
+treeNode *getTreeNode(treeNode *pRoot, int pID);
 
 void printInOrder(treeNode *pRoot);
 

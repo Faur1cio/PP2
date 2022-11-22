@@ -344,6 +344,10 @@ void registerDocument(int pID) {
     printf("\n[i] Document Registered!\n");
 }
 
+void modifyDocumentMenu(int pID) {
+    treeNode *node = getDocumentNode(Graph, pID);
+}
+
 void projectDocumentationMenu() {
     printf("\n[*] Project Documentation menu\n");
     printf("[1] Show Task Documentation\n");
@@ -404,7 +408,26 @@ void projectDocumentationMenu() {
             }
             registerDocument(number);
             return projectDocumentationMenu();
-        case'5':
+        case '4':
+            printf("[*] Modify Document\n");
+            printf("[*] Insert the Document ID:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%s", str);
+            if (!isNumeric(str)) {
+                printf("[!] Invalid ID, it must be a number, try again!!\n");
+                return projectDocumentationMenu();
+            }
+            number = (int) strtol(str, (char **) NULL, 10);
+            if (!searchID(Graph, number)) {
+                printf("[!] Invalid ID, try again!!\n");
+                return projectDocumentationMenu();
+            }
+            if (searchTaskID(Graph, number) == 1) {
+                printf("[!] Invalid ID, it must be a document, try again!!\n");
+                return projectDocumentationMenu();
+            }
+
+        case '5':
             printf("[*] Delete Document\n");
             printf("[*] Insert the Document ID:");
             fgets(line, STRSIZE, stdin);
@@ -433,7 +456,7 @@ void menu() {
     printf("[1] Project Tasks\n");
     printf("[2] Project Documentation\n");
     printf("[3] Manage Routes\n");
-    printf("[3] Manage Resources\n");
+    printf("[4] Manage Resources\n");
     printf("[5] Work Breakdown Instruction\n");
     printf("[6] Recommended Route\n");
     printf("[0] Exit\n\n");
