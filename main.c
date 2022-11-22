@@ -362,6 +362,10 @@ void modifyDocumentMenu(int pID) {
     flushStdin();
 
     treeNode *node = getDocumentNode(Graph, pID);
+    if(node == NULL){
+        printf("[!] Unknown error, try again!!\n");
+        return;
+    }
     document temp = node->doc;
     char line[STRSIZE], str[STRSIZE];
 
@@ -388,6 +392,7 @@ void modifyDocumentMenu(int pID) {
             node->doc = temp;
             return modifyDocumentMenu(pID);
         case '0':
+            printf("\n[i] Document Modified!!\n");
             return;
         default:
             printf("[!] Invalid option, try again!!\n");
