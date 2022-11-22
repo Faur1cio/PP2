@@ -37,7 +37,7 @@ int isNumeric(const char *str) {
     return 1;
 }
 
-void register_Task_Menu(int pID) {
+void registerTaskMenu(int pID) {
     task temp;
     temp.ID = pID;
     char tDesc[STRSIZE], tType[STRSIZE];
@@ -78,7 +78,7 @@ void register_Task_Menu(int pID) {
         strcpy(tType, "Changes");
     else {
         printf("[!] Invalid option, try again!!\n");
-        return register_Task_Menu(pID);
+        return registerTaskMenu(pID);
     }
     strcpy(temp.type, tType);
 
@@ -87,12 +87,12 @@ void register_Task_Menu(int pID) {
     sscanf(line, "%s", str);
     if (!isNumeric(str)) {
         printf("[!] Invalid Effort, try again!!\n");
-        return register_Task_Menu(pID);
+        return registerTaskMenu(pID);
     }
     tEffort = (int) strtol(str, (char **) NULL, 10);
     if (tEffort < 1 || tEffort > 10) {
         printf("[!] Invalid Effort, try again!!\n");
-        return register_Task_Menu(pID);
+        return registerTaskMenu(pID);
     }
     temp.effort = tEffort;
 
@@ -101,7 +101,7 @@ void register_Task_Menu(int pID) {
     sscanf(line, "%s", str);
     if (!isNumeric(str)) {
         printf("[!] Invalid Time, try again!!\n");
-        return register_Task_Menu(pID);
+        return registerTaskMenu(pID);
     }
     tTime = (int) strtol(str, (char **) NULL, 10);
     temp.time = tTime;
@@ -115,7 +115,7 @@ void register_Task_Menu(int pID) {
     printf("\n[i] Task Registered!\n");
 }
 
-void modify_Task_Menu(int pID) {
+void modifyTaskMenu(int pID) {
     printf("\n[*] Modify Task menu\n");
     printf("[1] Change description\n");
     printf("[2] Change Type\n");
@@ -148,7 +148,7 @@ void modify_Task_Menu(int pID) {
             sscanf(line, "%[^\n]", tDesc);
             strcpy(temp.description, tDesc);
             node->task = temp;
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
         case '2':
             printf("[*] New Type:\n");
             printf("[1] Operational Task.\n"
@@ -175,56 +175,56 @@ void modify_Task_Menu(int pID) {
                 strcpy(tType, "Changes");
             else {
                 printf("[!] Invalid option, try again!!\n");
-                return modify_Task_Menu(pID);
+                return modifyTaskMenu(pID);
             }
             strcpy(temp.type, tType);
             node->task = temp;
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
         case '3':
             printf("[*] New Effort (1 - 10):");
             fgets(line, STRSIZE, stdin);
             sscanf(line, "%s", str);
             if (!isNumeric(str)) {
                 printf("[!] Invalid Effort, try again!!\n");
-                return modify_Task_Menu(pID);
+                return modifyTaskMenu(pID);
             }
             tEffort = (int) strtol(str, (char **) NULL, 10);
             if (tEffort < 1 || tEffort > 10) {
                 printf("[!] Invalid Effort, try again!!\n");
-                return modify_Task_Menu(pID);
+                return modifyTaskMenu(pID);
             }
             temp.effort = tEffort;
             node->task = temp;
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
         case '4':
             printf("[*] New Time:");
             fgets(line, STRSIZE, stdin);
             sscanf(line, "%s", str);
             if (!isNumeric(str)) {
                 printf("[!] Invalid Time, try again!!\n");
-                return modify_Task_Menu(pID);
+                return modifyTaskMenu(pID);
             }
             tTime = (int) strtol(str, (char **) NULL, 10);
             temp.time = tTime;
             node->task = temp;
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
         case '5':
             printf("[*] New Manager Name:");
             fgets(line, STRSIZE, stdin);
             sscanf(line, "%[^\n]", tManager);
             strcpy(temp.manager, tManager);
             node->task = temp;
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
         case '0':
             printf("\n[i] Task Modified!\n");
             return;
         default:
             printf("[!] Invalid option, try again!!\n");
-            return modify_Task_Menu(pID);
+            return modifyTaskMenu(pID);
     }
 }
 
-void project_Tasks_Menu() {
+void projectTasksMenu() {
     printf("\n[*] Project Tasks menu\n");
     printf("[1] Show Project Tasks\n");
     printf("[2] Register Task\n");
@@ -245,7 +245,7 @@ void project_Tasks_Menu() {
         case '1':
             printf("[*] Showing Tasks:\n");
             printProjectTasks(Graph);
-            return project_Tasks_Menu();
+            return projectTasksMenu();
         case '2':
             printf("[*] New Task:\n");
             printf("[*] Insert the ID:");
@@ -253,19 +253,19 @@ void project_Tasks_Menu() {
             sscanf(line, "%s", str);
             if (!isNumeric(str)) {
                 printf("[!] Invalid ID, it must be a number, try again!!\n");
-                return project_Tasks_Menu();
+                return projectTasksMenu();
             }
             number = (int) strtol(str, (char **) NULL, 10);
             if (countDigits(number) != 6) {
                 printf("[!] Invalid ID, it must be a 6 digit number, try again!!\n");
-                return project_Tasks_Menu();
+                return projectTasksMenu();
             }
             if (searchID(Graph, number)) {
                 printf("[!] Invalid ID, it's already being used, try again!!\n");
-                return project_Tasks_Menu();
+                return projectTasksMenu();
             }
-            register_Task_Menu(number);
-            return project_Tasks_Menu();
+            registerTaskMenu(number);
+            return projectTasksMenu();
         case '3':
             printf("[*] Modify Task:\n");
             printf("[*] Insert the ID:");
@@ -273,21 +273,51 @@ void project_Tasks_Menu() {
             sscanf(line, "%s", str);
             if (!isNumeric(str)) {
                 printf("[!] Invalid ID, it must be a number, try again!!\n");
-                return project_Tasks_Menu();
+                return projectTasksMenu();
             }
             number = (int) strtol(str, (char **) NULL, 10);
             if (!linearSearchTask(Graph, number)){
                 printf("[!] Invalid ID, try again!!\n");
-                return project_Tasks_Menu();
+                return projectTasksMenu();
             }
-            modify_Task_Menu(number);
+            modifyTaskMenu(number);
             updateEdges(Graph);
-            return project_Tasks_Menu();
+            return projectTasksMenu();
         case '0':
             return;
         default:
             printf("[!] Invalid option, try again!!\n");
-            return project_Tasks_Menu();
+            return projectTasksMenu();
+    }
+}
+
+void projectDocumentationMenu(){
+    printf("\n[*] Project Documentation menu\n");
+    printf("[1] Show Task Documentation\n");
+    printf("[2] Show Document\n"); //ID or Description
+    printf("[3] Register Document\n");
+    printf("[4] Modify Document\n");
+    printf("[5] Delete Document\n");
+    printf("[0] Exit\n\n");
+    printf("[*] Select an option:");
+
+    int choice = getchar();
+    while (choice == '\n')
+        choice = getchar();
+    printf("\n");
+    flushStdin();
+
+    switch (choice) {
+        case '1':
+
+            return projectDocumentationMenu();
+        case '2':
+            return projectDocumentationMenu();
+        case '0':
+            return;
+        default:
+            printf("[!] Invalid option, try again!!\n");
+            return projectDocumentationMenu();
     }
 }
 
@@ -310,9 +340,10 @@ void menu() {
 
     switch (choice) {
         case '1':
-            project_Tasks_Menu();
+            projectTasksMenu();
             return menu();
         case '2':
+            projectDocumentationMenu();
             return menu();
         case '0':
             return;

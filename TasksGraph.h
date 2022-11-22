@@ -43,4 +43,6 @@ int linearSearchTask(graph *G, int pID);
 
 void updateEdges(graph *G);
 
+void printDocumentation(graph *G, char pDesc[], int pID);
+
 #endif //PP2_GRAFO_H

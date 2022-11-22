@@ -40,4 +40,6 @@ void writeTreeToFile(char filename[], treeNode *pRoot);
 //pRoot must be passed by reference readFileToTree("string", &root)
 void readFileToTree(char filename[], treeNode **pRoot);
 
+void printDocTree(treeNode *pRoot);
+
 #endif //PP2_ARBOL_H

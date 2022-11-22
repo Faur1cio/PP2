@@ -160,6 +160,12 @@ void printProjectTasks(graph *G) {
     }
 }
 
+void printDocumentation(graph *G, char pDesc[], int pID) {
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        printDocTree(n->tree);
+    }
+}
+
 int linearSearchVertex(graph *G, int pID) {
     vertexNode *n;
     n = G->vertices;
