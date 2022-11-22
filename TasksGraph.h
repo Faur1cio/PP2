@@ -49,4 +49,6 @@ void printTaskDocumentation(graph *G, char pDesc[], int pID);
 
 void printDocumentByID(graph *G, int pID);
 
+void deleteDocument(graph *G, int pID);
+
 #endif //PP2_GRAFO_H

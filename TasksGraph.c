@@ -193,6 +193,21 @@ void printDocumentByID(graph *G, int pID) {
     }
 }
 
+void deleteDocument(graph *G, int pID) {
+    int exists = 0;
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next)
+        if (searchDocumentID(n->tree, pID) == 1) {
+            if(n->tree->doc.ID == pID && isLeaf(n->tree) == 1)
+                n->tree = NULL;
+            else
+                n->tree = deleteTreeNode(n->tree, pID);
+            exists = 1;
+        }
+    if (exists == 0) {
+        printf("[!] There's no related document!!\n");
+    }
+}
+
 int linearSearchVertex(graph *G, int pID) {
     vertexNode *n;
     n = G->vertices;

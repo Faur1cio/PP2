@@ -260,7 +260,7 @@ void projectTasksMenu() {
                 return projectTasksMenu();
             }
             number = (int) strtol(str, (char **) NULL, 10);
-            if (countDigits(number) != 6) {
+            if (countDigits(number) != 3) {
                 printf("[!] Invalid ID, it must be a 6 digit number, try again!!\n");
                 return projectTasksMenu();
             }
@@ -298,6 +298,7 @@ void projectTasksMenu() {
 void registerDocument(int pID) {
     printf("[*] New Document\n");
     vertexNode *node = getVertexNode(Graph, pID);
+    printf("Prueba %s\n", node->task.description);
     document temp;
     int tID;
     char tPath[STRSIZE], tDesc[STRSIZE], tType[STRSIZE];
@@ -314,7 +315,7 @@ void registerDocument(int pID) {
         return projectTasksMenu();
     }
     tID = (int) strtol(str, (char **) NULL, 10);
-    if (countDigits(tID) != 6) {
+    if (countDigits(tID) != 3) {
         printf("[!] Invalid ID, it must be a 6 digit number, try again!!\n");
         return registerDocument(pID);
     }
@@ -339,7 +340,7 @@ void registerDocument(int pID) {
     sscanf(line, "%[^\n]", tType);
     strcpy(temp.type, tType);
 
-    insertTree(node->tree, temp);
+    node->tree = insertTree(node->tree, temp);
     printf("\n[i] Document Registered!\n");
 }
 
@@ -389,7 +390,7 @@ void projectDocumentationMenu() {
             return projectDocumentationMenu();
         case '3':
             printf("[*] Register Document\n");
-            printf("[*] Insert the ID of the Task:");
+            printf("[*] Insert the Task ID:");
             fgets(line, STRSIZE, stdin);
             sscanf(line, "%s", str);
             if (!isNumeric(str)) {
@@ -402,6 +403,22 @@ void projectDocumentationMenu() {
                 return projectDocumentationMenu();
             }
             registerDocument(number);
+            return projectDocumentationMenu();
+        case'5':
+            printf("[*] Delete Document\n");
+            printf("[*] Insert the Document ID:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%s", str);
+            if (!isNumeric(str)) {
+                printf("[!] Invalid ID, it must be a number, try again!!\n");
+                return projectDocumentationMenu();
+            }
+            number = (int) strtol(str, (char **) NULL, 10);
+            if (!searchID(Graph, number)) {
+                printf("[!] Invalid ID, try again!!\n");
+                return projectDocumentationMenu();
+            }
+            deleteDocument(Graph, number);
             return projectDocumentationMenu();
         case '0':
             return;
