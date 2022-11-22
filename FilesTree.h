@@ -19,7 +19,7 @@ struct treeNode {
     struct treeNode *right;
 };
 
-int searchDocument(treeNode *pRoot, int pID);
+int searchDocumentID(treeNode *pRoot, int pID);
 
 treeNode *getFileNode(treeNode *pRoot, int pID);
 
@@ -41,5 +41,7 @@ void writeTreeToFile(char filename[], treeNode *pRoot);
 void readFileToTree(char filename[], treeNode **pRoot);
 
 void printDocTree(treeNode *pRoot);
+
+void printDocument(treeNode *pRoot, int pID);
 
 #endif //PP2_ARBOL_H

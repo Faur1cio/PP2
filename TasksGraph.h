@@ -39,10 +39,14 @@ void insertVertex(graph *G, task pTask);
 
 vertexNode *getVertexNode(graph *G, int pID);
 
-int linearSearchTask(graph *G, int pID);
+int searchTaskID(graph *G, int pID);
+
+int searchTaskDesc(graph *G, char pDesc[]);
 
 void updateEdges(graph *G);
 
-void printDocumentation(graph *G, char pDesc[], int pID);
+void printTaskDocumentation(graph *G, char pDesc[], int pID);
+
+void printDocumentByID(graph *G, int pID);
 
 #endif //PP2_GRAFO_H

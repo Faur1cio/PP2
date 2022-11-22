@@ -83,9 +83,17 @@ int getTaskEffort(graph *G, int pID) {
     return 0;
 }
 
-int linearSearchTask(graph *G, int pID) {
+int searchTaskID(graph *G, int pID) {
     for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
         if (n->task.ID == pID)
+            return 1;
+    }
+    return 0;
+}
+
+int searchTaskDesc(graph *G, char pDesc[]) {
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
+        if (strcmp(n->task.description, pDesc) == 0)
             return 1;
     }
     return 0;
@@ -160,9 +168,28 @@ void printProjectTasks(graph *G) {
     }
 }
 
-void printDocumentation(graph *G, char pDesc[], int pID) {
+void printTaskDocumentation(graph *G, char pDesc[], int pID) {
+    int exists = 0;
     for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
-        printDocTree(n->tree);
+        if ((strcmp(n->task.description, pDesc) == 0) || n->task.ID == pID) {
+            printDocTree(n->tree);
+            exists = 1;
+        }
+    }
+    if (exists == 0) {
+        printf("[!] There's no related task!!\n");
+    }
+}
+
+void printDocumentByID(graph *G, int pID) {
+    int exists = 0;
+    for (vertexNode *n = G->vertices; n != NULL; n = n->next)
+        if (searchDocumentID(n->tree, pID) == 1) {
+            printDocument(n->tree, pID);
+            exists = 1;
+        }
+    if (exists == 0) {
+        printf("[!] There's no related document!!\n");
     }
 }
 
@@ -180,7 +207,7 @@ int linearSearchVertex(graph *G, int pID) {
 int searchID(graph *G, int pID) {
     vertexNode *n;
     for (n = G->vertices; n != NULL; n = n->next)
-        if (n->task.ID == pID || searchDocument(n->tree, pID) == 1)
+        if (n->task.ID == pID || searchDocumentID(n->tree, pID) == 1)
             return 1;
     return 0;
 }

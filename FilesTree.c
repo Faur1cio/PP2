@@ -1,16 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "FilesTree.h"
+#include <string.h>
 
-int searchDocument(treeNode *pRoot, int pID) {
+int searchDocumentID(treeNode *pRoot, int pID) {
     if (pRoot == NULL)
         return 0;
     if (pRoot->doc.ID == pID)
         return 1;
     if (pID < pRoot->doc.ID)
-        searchDocument(pRoot->left, pID);
+        searchDocumentID(pRoot->left, pID);
     else
-        searchDocument(pRoot->right, pID);
+        searchDocumentID(pRoot->right, pID);
+}
+
+void printDocument(treeNode *pRoot, int pID) {
+    if (pRoot == NULL){
+        return;
+    }
+    if (pRoot->doc.ID == pID) {
+        printf("ID\t\t%d\n"
+               "Path\t\t%s\n"
+               "Desc\t\t%s\n"
+               "Type\t\t%s\n\n", pRoot->doc.ID,
+               pRoot->doc.path, pRoot->doc.description, pRoot->doc.type);
+        return;
+    }
+    if (pID < pRoot->doc.ID)
+        searchDocumentID(pRoot->left, pID);
+    else
+        searchDocumentID(pRoot->right, pID);
 }
 
 treeNode *getFileNode(treeNode *pRoot, int pID) {
