@@ -345,7 +345,7 @@ void registerDocument(int pID) {
 }
 
 void modifyDocumentMenu(int pID) {
-    printf("\n[*] Modify Task menu\n");
+    printf("\n[*] Modify Document menu\n");
     printf("[1] Change Path\n");
     printf("[2] Change Description\n");
     printf("[3] Change Type\n");
@@ -362,7 +362,7 @@ void modifyDocumentMenu(int pID) {
     flushStdin();
 
     treeNode *node = getDocumentNode(Graph, pID);
-    if(node == NULL){
+    if (node == NULL) {
         printf("[!] Unknown error, try again!!\n");
         return;
     }
@@ -504,6 +504,10 @@ void projectDocumentationMenu() {
     }
 }
 
+void manageRoutesMenu() {
+
+}
+
 void menu() {
     printf("\n[*] Main menu\n");
     printf("[1] Project Tasks\n");
@@ -527,6 +531,9 @@ void menu() {
             return menu();
         case '2':
             projectDocumentationMenu();
+            return menu();
+        case '3':
+            manageRoutesMenu();
             return menu();
         case '0':
             return;

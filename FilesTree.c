@@ -15,7 +15,7 @@ int searchDocumentID(treeNode *pRoot, int pID) {
 }
 
 void printDocument(treeNode *pRoot, int pID) {
-    if (pRoot == NULL){
+    if (pRoot == NULL) {
         return;
     }
     if (pRoot->doc.ID == pID) {
@@ -151,12 +151,12 @@ treeNode *deleteTreeNode(treeNode *pRoot, int pID) {
             free(pRoot);
             return temp;
         } else if (pRoot->right == NULL) {
-            treeNode *temp  = pRoot->left;
+            treeNode *temp = pRoot->left;
             free(pRoot);
             return temp;
         }
 
-        treeNode *temp  = getMinNode(pRoot->right);
+        treeNode *temp = getMinNode(pRoot->right);
 
         pRoot->doc.ID = temp->doc.ID;
 

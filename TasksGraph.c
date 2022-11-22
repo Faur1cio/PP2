@@ -182,12 +182,13 @@ void printTaskDocumentation(graph *G, char pDesc[], int pID) {
     int exists = 0;
     for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
         if ((strcmp(n->task.description, pDesc) == 0) || n->task.ID == pID) {
+            if (n->tree != NULL)
+                exists = 1;
             printDocTree(n->tree);
-            exists = 1;
         }
     }
     if (exists == 0) {
-        printf("[!] There's no related task!!\n");
+        printf("[!] There's no related Documentation!!\n");
     }
 }
 
@@ -207,7 +208,7 @@ void deleteDocument(graph *G, int pID) {
     int exists = 0;
     for (vertexNode *n = G->vertices; n != NULL; n = n->next)
         if (searchDocumentID(n->tree, pID) == 1) {
-            if(n->tree->doc.ID == pID && isLeaf(n->tree) == 1)
+            if (n->tree->doc.ID == pID && isLeaf(n->tree) == 1)
                 n->tree = NULL;
             else
                 n->tree = deleteTreeNode(n->tree, pID);
