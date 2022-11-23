@@ -575,6 +575,14 @@ void manageRoutesMenu() {
             return manageRoutesMenu();
     }
 }
+/*
+- ID.
+- Nombre del recurso.
+- Tipo del recurso (Humanos, materiales, financieros, de tiempo, etc).
+- Capacidad del recurso (mensual, diaria, horas).
+- Cantidad Disponible,
+- Encargado.
+ */
 
 void menu() {
     printf("\n[*] Main menu\n");
