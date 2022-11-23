@@ -19,10 +19,10 @@ void printDocument(treeNode *pRoot, int pID) {
         return;
     }
     if (pRoot->doc.ID == pID) {
-        printf("ID\t\t%d\n"
-               "Path\t\t%s\n"
-               "Desc\t\t%s\n"
-               "Type\t\t%s\n\n", pRoot->doc.ID,
+        printf("ID              %d\n"
+               "Path            %s\n"
+               "Desc            %s\n"
+               "Type            %s\n\n", pRoot->doc.ID,
                pRoot->doc.path, pRoot->doc.description, pRoot->doc.type);
         return;
     }

@@ -305,7 +305,6 @@ void projectTasksMenu() {
 void registerDocument(int pID) {
     printf("[*] New Document\n");
     vertexNode *node = getVertexNode(Graph, pID);
-    printf("Prueba %s\n", node->task.description);
     document temp;
     int tID;
     char tPath[STRSIZE], tDesc[STRSIZE], tType[STRSIZE];
