@@ -511,7 +511,6 @@ void projectDocumentationMenu() {
     }
 }
 
-
 void manageRoutesMenu() {
     printf("\n[*] Routes menu\n");
     printf("[1] Create/Add a Route\n");
@@ -560,12 +559,15 @@ void manageRoutesMenu() {
                 route[i] = number;
                 i++;
             }
-            printf("\n[*] The the new route is:\n");
-            for (i = 0; i < Graph->size; i++)
-                printf("%d-->> ", route[i]);
-            printf("\n");
+            printNewRoute(Graph, route, Graph->size);
+            addNewRoute(Graph, route, Graph->size);
             return manageRoutesMenu();
         case '2':
+            if (Graph->size < 2) {
+                printf("[!] There are not enough tasks!!\n");
+                return manageRoutesMenu();
+            }
+            printAdjacencyList(Graph);
             return manageRoutesMenu();
         case '0':
             return;

@@ -127,7 +127,6 @@ void insertEdge(graph *G, int pOrigin, int pDest) {
     int time = getTaskTime(G, pOrigin);
     int effort = getTaskEffort(G, pOrigin);
     edgeNode *newN = newEdgeNode(pOrigin, pDest, time, effort);
-    G->size++;
     if (G->edges == NULL) {
         G->edges = newN;
         return;
@@ -140,6 +139,24 @@ void insertEdge(graph *G, int pOrigin, int pDest) {
     aux->next = newN;
 }
 
+void printNewRoute(graph *G, const int *pArr, int pSize) {
+    printf("\n[*] The the new route is:\n|| ");
+    for (int i = 0; i < pSize; i++) {
+        if (i != pSize - 1)
+            printf("%d - {t:%d, e:%d} - > ", pArr[i], getTaskTime(G, pArr[i]), getTaskEffort(G, pArr[i]));
+        else
+            printf("%d ||", pArr[i], getTaskTime(G, pArr[i]), getTaskEffort(G, pArr[i]));
+    }
+    printf("\n");
+}
+
+void addNewRoute(graph *G, const int *pArr, int pSize) {
+    for (int i = 0; i < pSize; i++) {
+        if (i != pSize - 1)
+            insertEdge(G, pArr[i], pArr[i + 1]);
+    }
+}
+
 void updateEdges(graph *G) {
     for (edgeNode *n = G->edges; n != NULL; n = n->next) {
         n->effort = getTaskEffort(G, n->origin);
@@ -150,9 +167,9 @@ void updateEdges(graph *G) {
 void printAdjacencyList(graph *G) {
     vertexNode *V;
     edgeNode *E;
-    printf("Adjacency List:\n");
+    printf("[*] Adjacency List:\n");
     for (V = G->vertices; V != NULL; V = V->next) {
-        printf("%d");
+        printf("%d", V->task.ID);
         for (E = G->edges; E != NULL; E = E->next)
             if (E->origin == V->task.ID)
                 printf(" -> {%d, time:%d, effort:%d}", E->dest, E->time, E->effort);

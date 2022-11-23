@@ -45,6 +45,10 @@ int searchID(graph *G, int pID);
 
 void insertVertex(graph *G, task pTask);
 
+void insertEdge(graph *G, int pOrigin, int pDest);
+
+void addNewRoute(graph *G, const int *pArr, int pSize);
+
 vertexNode *getVertexNode(graph *G, int pID);
 
 int searchTaskID(graph *G, int pID);
@@ -56,6 +60,10 @@ void updateEdges(graph *G);
 void printTaskDocumentation(graph *G, char pDesc[], int pID);
 
 void printDocumentByID(graph *G, int pID);
+
+void printNewRoute(graph *G, const int *pArr, int pSize);
+
+void printAdjacencyList(graph *G);
 
 void deleteDocument(graph *G, int pID);
 
