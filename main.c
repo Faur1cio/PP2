@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "FilesTree.h"
 #include "TasksGraph.h"
+#include "resourcesList.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +9,7 @@
 #define BUF_SIZE 50
 
 graph *Graph = NULL;
+resourcesList *Res = NULL;
 
 void flushStdin() {
     int c;
@@ -584,6 +586,128 @@ void manageRoutesMenu() {
 - Encargado.
  */
 
+void addResourceMenu() {
+    printf("[*] New Resource\n");
+    resource temp;
+    int ID, amount;
+    char name[STRSIZE], type[STRSIZE];
+    char capacity[STRSIZE], manager[STRSIZE];
+    char line[STRSIZE], str[STRSIZE];
+
+    fflush(stdin);
+    fflush(stdout);
+
+    printf("[*] Insert the ID:");
+    fgets(line, STRSIZE, stdin);
+    sscanf(line, "%s", str);
+    if (!isNumeric(str)) {
+        printf("[!] Invalid ID, it must be a number, try again!!\n");
+        return addResourceMenu();
+    }
+    ID = (int) strtol(str, (char **) NULL, 10);
+    temp.ID = ID;
+
+    printf("[*] Insert the Name:");
+    fgets(line, STRSIZE, stdin);
+    sscanf(line, "%[^\n]", name);
+    strcpy(temp.name, name);
+
+    printf("[*] Insert the Type:");
+    fgets(line, STRSIZE, stdin);
+    sscanf(line, "%s", type);
+    strcpy(temp.type, type);
+
+    printf("[*] Select the Capacity:\n");
+    printf("[D] Daily.\n"
+           "[M] Monthly.\n"
+           "[H] Hourly.\n");
+    printf("[*] Select an option:");
+
+    int choice = getchar();
+    while (choice == '\n')
+        choice = getchar();
+    flushStdin();
+
+    if (choice == 'D')
+        strcpy(capacity, "Daily");
+    else if (choice == 'M')
+        strcpy(capacity, "Monthly");
+    else if (choice == 'H')
+        strcpy(capacity, "Hourly");
+    else {
+        printf("[!] Invalid option, try again!!\n");
+        return addResourceMenu();
+    }
+    strcpy(temp.capacity, capacity);
+
+    printf("[*] Insert the Amount:");
+    fgets(line, STRSIZE, stdin);
+    sscanf(line, "%s", str);
+    if (!isNumeric(str)) {
+        printf("[!] Invalid Amount, it must be a number, try again!!\n");
+        return addResourceMenu();
+    }
+    amount = (int) strtol(str, (char **) NULL, 10);
+    temp.amount = amount;
+
+    printf("[*] Insert the Manager:");
+    fgets(line, STRSIZE, stdin);
+    sscanf(line, "%[^\n]", manager);
+    strcpy(temp.manager, manager);
+
+    insertResource(Res, temp);
+    printf("\n[i] Resource Registered!\n");
+}
+
+void manageResourcesMenu() {
+    printf("\n[*] Resources menu\n");
+    printf("[1] Show resources\n");
+    printf("[2] Add Resource\n");
+    printf("[3] Delete Resource\n");
+    printf("[0] Exit\n\n");
+    printf("[*] Select an option:");
+
+    int choice = getchar();
+    while (choice == '\n')
+        choice = getchar();
+    printf("\n");
+    flushStdin();
+
+    int ID;
+    char line[STRSIZE], str[STRSIZE];
+
+    switch (choice) {
+        case '1':
+            if(isEmptyRList(Res)) {
+                printf("[i] There are no Resources yet!!\n");
+                return manageResourcesMenu();
+            }
+            printf("[*] Resources List:\n");
+            printResourcesList(Res);
+            return manageResourcesMenu();
+        case '2':
+            addResourceMenu();
+            return manageResourcesMenu();
+        case '3':
+            printf("[*] Deleting Resource\n");
+            printf("[*] Insert the Resource ID:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%s", str);
+            if (!isNumeric(str)) {
+                printf("[!] Invalid ID, it must be a number, try again!!\n");
+                return manageResourcesMenu();
+            }
+            ID = (int) strtol(str, (char **) NULL, 10);
+            deleteResource(Res, ID);
+            return manageResourcesMenu();
+        case '0':
+            return;
+        default:
+            printf("[!] Invalid option, try again!!\n");
+            return manageResourcesMenu();
+    }
+}
+
 void menu() {
     printf("\n[*] Main menu\n");
     printf("[1] Project Tasks\n");
@@ -611,6 +735,9 @@ void menu() {
         case '3':
             manageRoutesMenu();
             return menu();
+        case '4':
+            manageResourcesMenu();
+            return menu();
         case '0':
             return;
         default:
@@ -621,10 +748,13 @@ void menu() {
 
 int main() {
     Graph = newGraph();
+    Res = newResourcesList();
     loadGraph(Graph);
+    loadResourcesList(Res);
 
     menu();
 
+    saveResourcesList(Res);
     saveGraph(Graph);
     freeGraph(Graph);
     return 0;

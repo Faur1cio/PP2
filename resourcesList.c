@@ -1,35 +1,41 @@
-#include "ResourcesList.h"
+#include "resourcesList.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-struct ResourcesList {
-    ResourcesNode *head;
+struct resourcesList {
+    resourcesNode *head;
     int size;
 };
 
-struct ResourcesNode {
+struct resourcesNode {
     resource data;
-    ResourcesNode *next;
+    resourcesNode *next;
 };
 
-ResourcesList *newResourcesList() {
-    ResourcesList *L;
-    L = (ResourcesList *) malloc(sizeof(ResourcesList));
+int isEmptyRList(resourcesList *L) {
+    if(L->head == NULL)
+        return 1;
+    return 0;
+}
+
+resourcesList *newResourcesList() {
+    resourcesList *L;
+    L = (resourcesList *) malloc(sizeof(resourcesList));
     L->head = NULL;
     L->size = 0;
     return L;
 }
 
-ResourcesNode *newResourcesNode(resource pRes) {
-    ResourcesNode *N;
-    N = (ResourcesNode *) malloc(sizeof(ResourcesNode));
+resourcesNode *newResourcesNode(resource pRes) {
+    resourcesNode *N;
+    N = (resourcesNode *) malloc(sizeof(resourcesNode));
     N->next = NULL;
     N->data = pRes;
     return N;
 }
 
-void insertResource(ResourcesList *L, resource pRes) {
-    ResourcesNode *n, *aux, *newNode;
+void insertResource(resourcesList *L, resource pRes) {
+    resourcesNode *n, *aux, *newNode;
     newNode = newResourcesNode(pRes);
     L->size++;
     if (L->head == NULL) {
@@ -44,8 +50,8 @@ void insertResource(ResourcesList *L, resource pRes) {
     aux->next = newNode;
 }
 
-void deleteResource(ResourcesList *L, int pID) {
-    ResourcesNode *aux, *n;
+void deleteResource(resourcesList *L, int pID) {
+    resourcesNode *aux, *n;
     if (L->head == NULL)
         return;
     if (L->head->data.ID == pID) {
@@ -67,8 +73,8 @@ void deleteResource(ResourcesList *L, int pID) {
     }
 }
 
-void freeResourcesList(ResourcesList *L) {
-    ResourcesNode *n, *aux;
+void freeResourcesList(resourcesList *L) {
+    resourcesNode *n, *aux;
     L->size = 0;
     if (L->head == NULL) {
         return;
@@ -82,36 +88,36 @@ void freeResourcesList(ResourcesList *L) {
     L->head = NULL;
 }
 
-void printResourcesList(const ResourcesList *L) {
+void printResourcesList(const resourcesList *L) {
     printf("\nID\t\tName\t\tType\t\tCapacity\t\tAmount\t\tManager\n");
     printf("--\t\t----\t\t----\t\t--------\t\t------\t\t-------\n");
-    for (ResourcesNode *n = L->head; n != NULL; n = n->next) {
+    for (resourcesNode *n = L->head; n != NULL; n = n->next) {
         printf("%d\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s", n->data.ID, n->data.name, n->data.type, n->data.amount,
                n->data.manager);
     }
     printf("\n");
 }
 
-void saveResourcesList(ResourcesList *L) {
+void saveResourcesList(resourcesList *L) {
     FILE *file;
     file = fopen("Resources", "wb");
     if (file == NULL)
         return;
 
-    for (ResourcesNode *n = L->head; n != NULL; n = n->next)
-        fwrite(n, sizeof(ResourcesNode), 1, file);
+    for (resourcesNode *n = L->head; n != NULL; n = n->next)
+        fwrite(n, sizeof(resourcesNode), 1, file);
 
     fclose(file);
 }
 
-void loadResourcesList(ResourcesList *L) {
-    ResourcesNode *temp = (ResourcesNode *) malloc(sizeof(ResourcesNode));
+void loadResourcesList(resourcesList *L) {
+    resourcesNode *temp = (resourcesNode *) malloc(sizeof(resourcesNode));
     FILE *file;
     file = fopen("Resources", "rb");
     if (file == NULL)
         return;
 
-    while (fread(temp, sizeof(ResourcesNode), 1, file))
+    while (fread(temp, sizeof(resourcesNode), 1, file))
         insertResource(L, temp->data);
 
     free(temp);
