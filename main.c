@@ -717,6 +717,8 @@ void menu() {
     printf("\n");
     flushStdin();
 
+    char line[STRSIZE], str[STRSIZE];
+
     switch (choice) {
         case '1':
             projectTasksMenu();
@@ -731,7 +733,19 @@ void menu() {
             manageResourcesMenu();
             return menu();
         case '6':
-            dijkstraAlgorithm(Graph, 111);
+            printf("[*] Insert the first task:");
+            fgets(line, STRSIZE, stdin);
+            sscanf(line, "%s", str);
+            if (!isNumeric(str)) {
+                printf("[!] Invalid ID, it must be a number, try again!!\n");
+                return menu();
+            }
+            int number = (int) strtol(str, (char **) NULL, 10);
+            if (!searchTaskID(Graph, number)) {
+                printf("[!] Invalid ID, try again!!\n");
+                return menu();
+            }
+            dijkstraAlgorithm(Graph, number);
             return menu();
         case '0':
             return;

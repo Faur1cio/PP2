@@ -307,7 +307,7 @@ void printOrder(graph *G, label labels[], int dest) {
 }
 
 void printRecommendedRoute(graph *G, int size, label labels[]) {
-    printf("Effort\tRecommended Routes\n");
+    printf("Effort  Recommended Routes\n");
     for (int i = 0; i < size; i++) {
         printf("[%d]\t", labels[i].weight);
         printOrder(G, labels, i);
