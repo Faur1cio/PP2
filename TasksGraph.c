@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define INF 9999999
+#include <limits.h>
 
 struct edgeNode {
     int origin;
@@ -172,7 +171,7 @@ void printAdjacencyList(graph *G) {
         printf("%d", V->task.ID);
         for (E = G->edges; E != NULL; E = E->next)
             if (E->origin == V->task.ID)
-                printf(" -> {%d, time:%d, effort:%d}", E->dest, E->time, E->effort);
+                printf(" -> {%d, t:%d, e:%d}", E->dest, E->time, E->effort);
         printf("\n");
     }
     printf("\n");
@@ -188,13 +187,14 @@ void printProjectTasks(graph *G) {
         printf("Manger\t\t%s\n\n", n->task.manager);
     }
 }
+
 void printTasksList(graph *G) {
     vertexNode *n = G->vertices;
     printf("\n");
     for (int i = 0; i < G->size; i++) {
-        if(i == 0)
+        if (i == 0)
             printf("{%d, ", n->task.ID);
-        else if (i == G->size -1)
+        else if (i == G->size - 1)
             printf("%d}", n->task.ID);
         else
             printf("%d, ", n->task.ID);
@@ -264,36 +264,95 @@ int searchID(graph *G, int pID) {
     return 0;
 }
 
-void graphMatrixEffort(graph *G, int **matrix) {
-    int i, j;
-    for (i = 0; i < G->size; i++)
-        for (j = 0; j < G->size; j++) {
-            if (i == j)
-                matrix[i][j] = 0;
-            else
-                matrix[i][j] = INF;
+typedef struct {
+    int weight;
+    int previous;
+} label;
+
+int getMinLabel(int size, const label pLabels[], const int pStatusArr[]) {
+    int min = INT_MAX, index;
+    for (int i = 0; i < size; i++)
+        if (pStatusArr[i] == 0 && pLabels[i].weight <= min) {
+            min = pLabels[i].weight;
+            index = i;
         }
+    return index;
+}
+
+int findTempLabel(int size, const int pArr[]) {
+    for (int i = 0; i < size; i++)
+        if (pArr[i] == 0)
+            return 1;
+    return 0;
+}
+
+int getIDByIndex(graph *G, int index) {
+    vertexNode *n = G->vertices;
+    for (int i = 0; i < G->size; i++) {
+        if (i == index)
+            return n->task.ID;
+        n = n->next;
+    }
+    return -1;
+}
+
+void printOrder(graph *G, label labels[], int dest) {
+    if(labels[dest].previous == -1) {
+        printf("%d", getIDByIndex(G, dest));
+        return;
+    }
+    else
+        printOrder(G, labels, labels[dest].previous);
+    printf(" --> %d", getIDByIndex(G, dest));
+}
+
+void printRecommendedRoute(graph *G, int size, label labels[]) {
+    printf("Effort\tRecommended Routes\n");
+    for (int i = 0; i < size; i++) {
+        printf("[%d]\t", labels[i].weight);
+        printOrder(G, labels, i);
+        printf("\n");
+    }
+}
+
+void dijkstraAlgorithm(graph *G, int pIDSource) {
+    int i, j;
+
+    int matrix[G->size][G->size];
+    for (i = 0; i < G->size; i++)
+        for (j = 0; j < G->size; j++)
+            matrix[i][j] = 0;
     for (edgeNode *n = G->edges; n != NULL; n = n->next) {
         i = linearSearchVertex(G, n->origin);
         j = linearSearchVertex(G, n->dest);
         matrix[i][j] = n->effort;
     }
-}
+    int src = linearSearchVertex(G, pIDSource);
 
-void graphMatrixTime(graph *G, int **matrix) {
-    int i, j;
-    for (i = 0; i < G->size; i++)
-        for (j = 0; j < G->size; j++) {
-            if (i == j)
-                matrix[i][j] = 0;
-            else
-                matrix[i][j] = INF;
-        }
-    for (edgeNode *n = G->edges; n != NULL; n = n->next) {
-        i = linearSearchVertex(G, n->origin);
-        j = linearSearchVertex(G, n->dest);
-        matrix[i][j] = n->time;
+    label labels[G->size];
+    int statusArr[G->size];
+
+    for (i = 0; i < G->size; i++) {
+        labels[i].weight = INT_MAX;
+        labels[i].previous = -1;
+        statusArr[i] = 0;
     }
+
+    labels[src].weight = 0;
+
+    while (findTempLabel(G->size, statusArr) == 1) {
+        int currIndex = getMinLabel(G->size, labels, statusArr);
+        statusArr[currIndex] = 1;
+        for (i = 0; i < G->size; i++) {
+            if (statusArr[i] == 0 && matrix[currIndex][i] != 0
+                && labels[currIndex].weight != INT_MAX
+                && labels[currIndex].weight + matrix[currIndex][i] < labels[i].weight) {
+                labels[i].weight = labels[currIndex].weight + matrix[currIndex][i];
+                labels[i].previous = currIndex;
+            }
+        }
+    }
+    printRecommendedRoute(G, G->size, labels);
 }
 
 void freeGraph(graph *G) {
@@ -337,7 +396,6 @@ void saveGraph(graph *G) {
     for (edgeNode *n = G->edges; n != NULL; n = n->next)
         fwrite(n, sizeof(edgeNode), 1, file2);
 
-    printf("\nData stored successfully!!\n");
     fclose(file1);
     fclose(file2);
 }

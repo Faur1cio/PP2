@@ -69,4 +69,6 @@ void deleteDocument(graph *G, int pID);
 
 treeNode *getDocumentNode(graph *G, int pID);
 
+void dijkstraAlgorithm(graph *G, int pIDSource);
+
 #endif //PP2_GRAFO_H

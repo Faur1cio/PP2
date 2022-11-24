@@ -707,7 +707,7 @@ void menu() {
     printf("[3] Manage Routes\n");
     printf("[4] Manage Resources\n");
     printf("[5] Work Breakdown Instruction\n");
-    printf("[6] Recommended Route\n");
+    printf("[6] Recommended Routes\n");
     printf("[0] Exit\n\n");
     printf("[*] Select an option:");
 
@@ -729,6 +729,9 @@ void menu() {
             return menu();
         case '4':
             manageResourcesMenu();
+            return menu();
+        case '6':
+            dijkstraAlgorithm(Graph, 111);
             return menu();
         case '0':
             return;
