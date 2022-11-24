@@ -279,10 +279,15 @@ int getMinLabel(int size, const label pLabels[], const int pStatusArr[]) {
     return index;
 }
 
-int findTempLabel(int size, const int pArr[]) {
-    for (int i = 0; i < size; i++)
-        if (pArr[i] == 0)
+int findBinarySearch(int *array, int element, int low, int high) {
+    if (high >= low) {
+        int mid = low + (high - low) / 2;
+        if (array[mid] == element)
             return 1;
+        if (array[mid] > element)
+            return findBinarySearch(array, element, low, mid - 1);
+        return findBinarySearch(array, element, mid + 1, high);
+    }
     return 0;
 }
 
@@ -297,11 +302,10 @@ int getIDByIndex(graph *G, int index) {
 }
 
 void printOrder(graph *G, label labels[], int dest) {
-    if(labels[dest].previous == -1) {
+    if (labels[dest].previous == -1) {
         printf("%d", getIDByIndex(G, dest));
         return;
-    }
-    else
+    } else
         printOrder(G, labels, labels[dest].previous);
     printf(" --> %d", getIDByIndex(G, dest));
 }
@@ -309,7 +313,10 @@ void printOrder(graph *G, label labels[], int dest) {
 void printRecommendedRoute(graph *G, int size, label labels[]) {
     printf("Effort  Recommended Routes\n");
     for (int i = 0; i < size; i++) {
-        printf("[%d]\t", labels[i].weight);
+        if (labels[i].weight != INT_MAX)
+            printf("[%d]\t", labels[i].weight);
+        else
+            printf("[--]\t");
         printOrder(G, labels, i);
         printf("\n");
     }
@@ -317,11 +324,12 @@ void printRecommendedRoute(graph *G, int size, label labels[]) {
 
 void dijkstraAlgorithm(graph *G, int pIDSource) {
     int i, j;
-
     int matrix[G->size][G->size];
+
     for (i = 0; i < G->size; i++)
         for (j = 0; j < G->size; j++)
             matrix[i][j] = 0;
+
     for (edgeNode *n = G->edges; n != NULL; n = n->next) {
         i = linearSearchVertex(G, n->origin);
         j = linearSearchVertex(G, n->dest);
@@ -340,15 +348,18 @@ void dijkstraAlgorithm(graph *G, int pIDSource) {
 
     labels[src].weight = 0;
 
-    while (findTempLabel(G->size, statusArr) == 1) {
+    while (findBinarySearch(statusArr, 0, 0, G->size - 1) == 1) {
         int currIndex = getMinLabel(G->size, labels, statusArr);
         statusArr[currIndex] = 1;
+
         for (i = 0; i < G->size; i++) {
             if (statusArr[i] == 0 && matrix[currIndex][i] != 0
                 && labels[currIndex].weight != INT_MAX
                 && labels[currIndex].weight + matrix[currIndex][i] < labels[i].weight) {
+
                 labels[i].weight = labels[currIndex].weight + matrix[currIndex][i];
                 labels[i].previous = currIndex;
+
             }
         }
     }
