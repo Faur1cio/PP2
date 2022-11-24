@@ -13,7 +13,7 @@ struct resourcesNode {
 };
 
 int isEmptyRList(resourcesList *L) {
-    if(L->head == NULL)
+    if (L->head == NULL)
         return 1;
     return 0;
 }
@@ -89,10 +89,9 @@ void freeResourcesList(resourcesList *L) {
 }
 
 void printResourcesList(const resourcesList *L) {
-    printf("\nID\t\tName\t\tType\t\tCapacity\t\tAmount\t\tManager\n");
-    printf("--\t\t----\t\t----\t\t--------\t\t------\t\t-------\n");
+    printf("\nID    Name    Type    Capacity    Amount    Manager\n\n");
     for (resourcesNode *n = L->head; n != NULL; n = n->next) {
-        printf("%d\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s", n->data.ID, n->data.name, n->data.type, n->data.amount,
+        printf("|| %d, %s, %s, %s, %d, %s", n->data.ID, n->data.name, n->data.type, n->data.capacity, n->data.amount,
                n->data.manager);
     }
     printf("\n");
