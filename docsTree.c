@@ -1,8 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "FilesTree.h"
-#include <string.h>
+#include "docsTree.h"
 
+/*
+ * Inputs:
+ *  - pRoot (treeNode *)
+ *  - pID (int)
+ * Outputs:
+ *  - Returns 1 if there's a document with the same ID as pID in the tree.
+ *  - Returns 0 if there is not one.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - pID must be a 3 digits integer.
+ */
 int searchDocumentID(treeNode *pRoot, int pID) {
     if (pRoot == NULL)
         return 0;
@@ -14,6 +24,16 @@ int searchDocumentID(treeNode *pRoot, int pID) {
         searchDocumentID(pRoot->right, pID);
 }
 
+/*
+ * Inputs:
+ *  - pRoot (treeNode *)
+ *  - pID (int)
+ * Outputs:
+ *  - Prints the document with the same ID as pID.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - pID must be a 3 digits integer.
+ */
 void printDocument(treeNode *pRoot, int pID) {
     if (pRoot == NULL) {
         return;
@@ -32,6 +52,16 @@ void printDocument(treeNode *pRoot, int pID) {
         searchDocumentID(pRoot->right, pID);
 }
 
+/*
+ * Inputs:
+ *  - pRoot (treeNode *)
+ *  - pID (int)
+ * Outputs:
+ *  - Returns a pointer to the node with the document with the same ID as pID.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - pID must be a 3 digits integer.
+ */
 treeNode *getTreeNode(treeNode *pRoot, int pID) {
     if (pRoot == NULL)
         return pRoot;
@@ -61,6 +91,14 @@ void printInOrder(treeNode *pRoot) {
     }
 }
 
+/*
+ * Inputs:
+ *  - pRoot (treeNode *)
+ * Outputs:
+ *  - Prints each document in the tree.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ */
 void printDocTree(treeNode *pRoot) {
     if (pRoot != NULL) {
         printDocTree(pRoot->left);
@@ -82,6 +120,14 @@ void printPostOrder(treeNode *pRoot) {
     }
 }
 
+/*
+ * Inputs:
+ *  - pRoot (treeNode *)
+ * Outputs:
+ *  - Frees the whole tree.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ */
 void freeTree(treeNode *pRoot) {
     if (pRoot != NULL) {
         freeTree(pRoot->left);
@@ -94,14 +140,28 @@ int isEmpty(treeNode *pRoot) {
     return pRoot == NULL;
 }
 
+/*
+ * Inputs:
+ *  - currentNode (treeNode *)
+ * Outputs:
+ *  - Returns 1 if the currentNode is a leaf node.
+ * Restrictions:
+ *  - currentNode must be a pointer to a treeNode, and currentNode must be != NULL.
+ */
 int isLeaf(treeNode *currentNode) {
     return (currentNode->left == NULL && currentNode->right == NULL);
 }
 
 /*
- * root = insetTree()
+ * Inputs:
+ *  - pRoot (treeNode *)
+ *  - pFile (document)
+ * Outputs:
+ *  - Inserts a node with the pFile (document) to the tree.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - pFile must be document type struct.
  */
-
 treeNode *insertTree(treeNode *pRoot, document pFile) {
     if (pRoot == NULL) {
         treeNode *n = malloc(sizeof(treeNode));
@@ -119,6 +179,14 @@ treeNode *insertTree(treeNode *pRoot, document pFile) {
     return pRoot;
 }
 
+/*
+ * Inputs:
+ *  - currentNode (treeNode *)
+ * Outputs:
+ *  - Gets the node that is furthest to the left
+ * Restrictions:
+ *  - currentNode must be a pointer to a treeNode, and currentNode must be != NULL.
+ */
 treeNode *getMinNode(treeNode *currentNode) {
     if (currentNode == NULL || currentNode->left == NULL)
         return currentNode;
@@ -133,7 +201,6 @@ treeNode *getMinNode(treeNode *currentNode) {
  * if(isLeaf(root) == 1)
  *      root = NULL;
  */
-
 treeNode *deleteTreeNode(treeNode *pRoot, int pID) {
     if (pRoot == NULL)
         return pRoot;
@@ -165,36 +232,41 @@ treeNode *deleteTreeNode(treeNode *pRoot, int pID) {
     return pRoot;
 }
 
-int passToArr(treeNode *pRoot, document *arr, int i) { //i must be initialized in 0
-    if (pRoot == NULL)
-        return i;
-
-    arr[i] = pRoot->doc;
-    i++;
-    if (pRoot->left != NULL)
-        i = passToArr(pRoot->left, arr, i);
-    if (pRoot->right != NULL)
-        i = passToArr(pRoot->right, arr, i);
-
-    return i;
-}
-
-void storeNode(FILE *pFile, treeNode *pRoot) {
+void storeNodes(FILE *pFile, treeNode *pRoot) {
     if (pRoot != NULL) {
         fwrite(pRoot, sizeof(treeNode), 1, pFile);
-        storeNode(pFile, pRoot->left);
-        storeNode(pFile, pRoot->right);
+        storeNodes(pFile, pRoot->left);
+        storeNodes(pFile, pRoot->right);
     }
 }
 
+/*
+ * Inputs:
+ *  - filename (char [])
+ *  - pRoot (treeNode *)
+ * Outputs:
+ *  - Saves all the nodes in the tree pRoot in to the file with the name filename.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - filename must be a string.
+ */
 void writeTreeToFile(char filename[], treeNode *pRoot) {
     FILE *file;
     file = fopen(filename, "wb");
-    storeNode(file, pRoot);
+    storeNodes(file, pRoot);
     fclose(file);
-    printf("\nData stored successfully!!\n");
 }
 
+/*
+ * Inputs:
+ *  - filename (char [])
+ *  - pRoot (treeNode *)
+ * Outputs:
+ *  - Saves all the nodes in the tree pRoot in to the file with the name filename.
+ * Restrictions:
+ *  - pRoot must be a pointer to a treeNode, and pRoot must be != NULL.
+ *  - filename must be a string.
+ */
 //pRoot must be passed by reference readFileToTree("string", &root)
 void readFileToTree(char filename[], treeNode **pRoot) {
     treeNode *temp = (treeNode *) malloc(sizeof(treeNode));

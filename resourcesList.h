@@ -1,7 +1,7 @@
 #ifndef MAIN_C_RESOURCESLIST_H
 #define MAIN_C_RESOURCESLIST_H
 
-#include "FilesTree.h"
+#include "docsTree.h"
 
 typedef struct resourcesList resourcesList;
 typedef struct resourcesNode resourcesNode;

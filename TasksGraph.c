@@ -441,6 +441,10 @@ void printAdjacencyList(graph *G) {
  *  - G must be a pointer to a graph node, and G must be != NULL.
  */
 void printProjectTasks(graph *G) {
+    if (G->vertices == NULL){
+        printf("[!] There are no tasks yet\n");
+        return;
+    }
     for (vertexNode *n = G->vertices; n != NULL; n = n->next) {
         printf("ID\t\t%d\n", n->task.ID);
         printf("Desc.\t\t%s\n", n->task.description);

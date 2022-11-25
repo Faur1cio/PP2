@@ -1,7 +1,7 @@
-#include "FilesTree.h"
+#include "docsTree.h"
 
-#ifndef PP2_GRAFO_H
-#define PP2_GRAFO_H
+#ifndef PP2_GRAPH_H
+#define PP2_GRAPH_H
 
 typedef struct graph graph;
 typedef struct vertexNode vertexNode;
@@ -71,4 +71,4 @@ void printAdjacencyList(graph *G);
 
 void dijkstraAlgorithm(graph *G, int pIDSource);
 
-#endif //PP2_GRAFO_H
+#endif //PP2_GRAPH_H

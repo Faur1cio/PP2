@@ -1,7 +1,7 @@
 #define STRSIZE 100
 
-#ifndef PP2_ARBOL_H
-#define PP2_ARBOL_H
+#ifndef PP2_TREE_H
+#define PP2_TREE_H
 
 typedef struct treeNode treeNode;
 typedef struct document document;
@@ -44,4 +44,4 @@ void printDocTree(treeNode *pRoot);
 
 void printDocument(treeNode *pRoot, int pID);
 
-#endif //PP2_ARBOL_H
+#endif //PP2_TREE_H

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "FilesTree.h"
+#include "docsTree.h"
 #include "TasksGraph.h"
 #include "resourcesList.h"
 #include <ctype.h>
@@ -270,7 +270,7 @@ void projectTasksMenu() {
             }
             number = (int) strtol(str, (char **) NULL, 10);
             if (countDigits(number) != 3) {
-                printf("[!] Invalid ID, it must be a 6 digit number, try again!!\n");
+                printf("[!] Invalid ID, it must be a 3 digit number, try again!!\n");
                 return projectTasksMenu();
             }
             if (searchID(Graph, number)) {
@@ -324,7 +324,7 @@ void registerDocument(int pID) {
     }
     tID = (int) strtol(str, (char **) NULL, 10);
     if (countDigits(tID) != 3) {
-        printf("[!] Invalid ID, it must be a 6 digit number, try again!!\n");
+        printf("[!] Invalid ID, it must be a 3 digit number, try again!!\n");
         return registerDocument(pID);
     }
     if (searchID(Graph, tID)) {
