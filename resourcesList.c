@@ -91,7 +91,7 @@ void freeResourcesList(resourcesList *L) {
 void printResourcesList(const resourcesList *L) {
     printf("\nID    Name    Type    Capacity    Amount    Manager\n\n");
     for (resourcesNode *n = L->head; n != NULL; n = n->next) {
-        printf("|| %d, %s, %s, %s, %d, %s", n->data.ID, n->data.name, n->data.type, n->data.capacity, n->data.amount,
+        printf("|| %d, %s, %s, %s, %d, %s\n", n->data.ID, n->data.name, n->data.type, n->data.capacity, n->data.amount,
                n->data.manager);
     }
     printf("\n");
