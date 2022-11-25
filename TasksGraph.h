@@ -31,7 +31,27 @@ struct vertexNode {
 
 graph *newGraph();
 
+void insertVertex(graph *G, task pTask);
+
+void insertEdge(graph *G, int pOrigin, int pDest);
+
+void addNewRoute(graph *G, const int *pArr, int pSize);
+
+vertexNode *getVertexNode(graph *G, int pID);
+
+treeNode *getDocumentNode(graph *G, int pID);
+
+void deleteDocument(graph *G, int pID);
+
+int searchID(graph *G, int pID);
+
+int searchTaskID(graph *G, int pID);
+
+int searchTaskDesc(graph *G, char pDesc[]);
+
 void freeGraph(graph *G);
+
+void updateEdges(graph *G);
 
 void saveGraph(graph *G);
 
@@ -41,22 +61,6 @@ void printProjectTasks(graph *G);
 
 void printTasksList(graph *G);
 
-int searchID(graph *G, int pID);
-
-void insertVertex(graph *G, task pTask);
-
-void insertEdge(graph *G, int pOrigin, int pDest);
-
-void addNewRoute(graph *G, const int *pArr, int pSize);
-
-vertexNode *getVertexNode(graph *G, int pID);
-
-int searchTaskID(graph *G, int pID);
-
-int searchTaskDesc(graph *G, char pDesc[]);
-
-void updateEdges(graph *G);
-
 void printTaskDocumentation(graph *G, char pDesc[], int pID);
 
 void printDocumentByID(graph *G, int pID);
@@ -64,10 +68,6 @@ void printDocumentByID(graph *G, int pID);
 void printNewRoute(graph *G, const int *pArr, int pSize);
 
 void printAdjacencyList(graph *G);
-
-void deleteDocument(graph *G, int pID);
-
-treeNode *getDocumentNode(graph *G, int pID);
 
 void dijkstraAlgorithm(graph *G, int pIDSource);
 

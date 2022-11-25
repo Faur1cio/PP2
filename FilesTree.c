@@ -63,13 +63,13 @@ void printInOrder(treeNode *pRoot) {
 
 void printDocTree(treeNode *pRoot) {
     if (pRoot != NULL) {
-        printInOrder(pRoot->left);
+        printDocTree(pRoot->left);
         printf("ID.\t\t%d\n"
                "Path\t\t%s\n"
                "Desc\t\t%s\n"
                "Type\t\t%s\n\n", pRoot->doc.ID,
                pRoot->doc.path, pRoot->doc.description, pRoot->doc.type);
-        printInOrder(pRoot->right);
+        printDocTree(pRoot->right);
     }
 }
 
